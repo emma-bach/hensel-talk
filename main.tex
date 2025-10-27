@@ -1,0 +1,413 @@
+\documentclass{report}
+\usepackage[a4paper,margin=1.5in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[titles]{tocloft}
+\usepackage[titletoc]{appendix}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+\usepackage[ddmmyyyy]{datetime}
+
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{tikz-cd}
+\usepackage{physics}
+\usepackage{placeins}
+
+%hyperref should be last apparently
+\usepackage{hyperref}
+
+\renewcommand\cftsecdotsep{\cftdot}
+\renewcommand\cftsubsecdotsep{\cftdot}
+\renewcommand\epsilon{\varepsilon}
+
+% Starts a new paragraph without indentation
+% and with an empty line between paragraphs
+\newcommand*{\newpar}{\par\vspace{\baselineskip}\noindent}
+
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\theoremname}[1]{\emph{\tbf{\ul{#1}}}}
+
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bF}{\mathbb{F}}
+\newcommand{\bN}{\mathbb{N}}
+\newcommand{\bQ}{\mathbb{Q}}
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bZ}{\mathbb{Z}}
+
+\newcommand{\an}{(a_n)_{n \in \bN}}
+\newcommand{\bn}{(b_n)_{n \in \bN}}
+\newcommand{\sn}{(s_n)_{n \in \bN}}
+
+\renewcommand*\contentsname{Inhalt}
+\renewcommand*\proofname{Beweis}
+
+\renewcommand{\labelenumi}{\roman{enumi}.)}
+
+\pagestyle{fancy} %allows headers
+
+\lhead{Emma Bach}
+\rhead{\today}
+
+\NewDocumentEnvironment{nalign}{}{\equation\aligned}{\endaligned\endequation}
+
+\begin{document}
+	% \newtheorem{codename}{printedname}[countedwith]
+	\newtheorem{lemma}{Lemma}[chapter]
+	\newtheorem{theorem}[lemma]{Satz}
+	\newtheorem{proposition}[lemma]{Proposition}
+	\newtheorem{corollary}[lemma]{Korollar}
+	\newtheorem{application}[lemma]{Anwendung}
+	
+	\theoremstyle{definition}
+	\newtheorem{definition}[lemma]{Definition}
+	\newtheorem{example}[lemma]{Beispiel}
+
+	\include{title}
+	\tableofcontents
+	\thispagestyle{fancy}
+	\chapter{Umgang mit Basen ungleich $10$}
+	Die gewohnte Dezimaldarstellung natürlicher Zahlen basiert auf der Erkenntnis, dass sich jede natürliche Zahl $n$ als Summe
+	\begin{align*}
+		n = \sum_{i = 1}^j a_i \cdot (10)^i
+	\end{align*}
+	von Zehnerpotenzen schreiben lässt, wobei $a_i \in \{0,1,\hdots,9\}$.
+	Schreiben wir die Zahl "152", so meinen wir formell die Zahl "$1 \cdot 10^2 + 5 \cdot 10 + 2$
+	Analog existiert jedoch eine ähnliche Darstellung für jedes $b \in \bN$:
+	\begin{align*}
+		n = \sum_{i = 1}^j a_i b^i
+	\end{align*}
+	mit $a_i \in \{0, 1, \hdots, b-1\}$.
+	\newpar
+	So ist zum Beispiel $152 = 128 + 16 + 8 = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 0 \cdot 2 + 0$. Somit ist die Binärdarstellung von $152$ $10011000$.
+	\newpar
+	Es ist außerdem $152 = 2 \cdot 64 + 1 \cdot 16 + 2 \cdot 4 + 0$, also ist $[152]_{10} = [2120]_4$.
+	\newpar
+	Zählen in Basen ungleich $10$ funktioniert ähnlich wie in Basis $10$, nur dass man eben eine Ziffer nach links übertragen muss, wenn man $b$ erreicht (statt 10). Die Natürlichen Zahlen in Basis $3$ sind somit $0,1,2,10,11,12,20,21,22,100,\hdots$
+	\chapter{Bewertungen und Metriken auf ${\bZ}$}
+	Wir betrachten die Folge:
+	\begin{align*}
+		a_n = 10^n
+	\end{align*}
+	In den reellen Zahlen mit der Standardtopologie hat diese Folge keinen Grenzwert. Betrachten wir allerdings die Glieder in Dezimaldarstellung, fällt aber intuitiv trotzdem eine Art "Grenzwertverhalten" auf:
+	\begin{align*}
+		a_1 = 1&0\\
+		a_2 = 10&0\\
+		a_3 = 100&0\\
+		a_4 = 1000&0\\
+		a_5 = 10000&0\\
+		a_6 = 100000&0\\
+		\hdots\\
+		\implies \lim_{a \to \infty} a_n= ...00&0?\\
+	\end{align*}
+	Ein analoges "Konvergenzverhalten" sehen wir für eine beliebige Folge der Form $a_n = p^n$, solange wir die Zahlen in Basis $p$ schreiben.
+	\newpar
+	Unser erstes Ziel in diesem Vortrag, wird es sein, diese Form von Konvergenz und die daraus entstehenden "Zahlen mit unendlich vielen Stellen vor dem Komma" zu formalisieren. Wir werden eine Familie von Metriken $\abs{-}_p$ einführen, sodass in jeder Metrik $\abs{-}_p$ die Folge $a_n = p^n$ tatsächlich zur Nullfolge wird.
+	\section{Der $p$-adische Betrag}
+	\begin{definition}
+		Sei $K$ ein Körper. Seien $x,y \in K$. Ein \tbf{Betrag} auf $K$ ist eine Funktion $\abs{-} : K \to \bR$ mit folgenden Eigenschaften:
+		\begin{enumerate}
+			\item $\abs{0_K} = 0$
+			\item \ul{Positivität:} $x \neq 0_K \implies \abs{x} > 0$
+			\item $\abs{x \cdot_K y} = \abs{x} \cdot \abs{y}$
+			\item \ul{Subadditivität:} $\abs{x +_K y} \leq \abs{x} + \abs{y}$
+		\end{enumerate}
+	\end{definition}
+	\begin{proposition}
+		Sei $K$ ein Körper und $\abs{}$ ein Betrag auf $K$. So ist
+		\begin{align*}
+			d : K \times K &\to \bR\\
+			(x,y) &\mapsto \abs{x - y}\\
+		\end{align*}
+		eine Metrik auf $K$.
+	\end{proposition}
+	Sei $(G, +, \geq)$ eine linear geordnete Gruppe. Wir fügen zu $G$ ein Element $\infty$ hinzu, welches die erwarteten Eigenschaften bezüglich der Ordnung und Gruppenoperation hat:
+	\begin{itemize}
+		\item $\forall g \in G : \infty \geq g$
+		\item $\forall g \in G : \infty + g = g + \infty = \infty + \infty = \infty$
+	\end{itemize}
+	\iffalse
+	\begin{definition}
+		Sei $K$ ein Körper und  $G$ eine linear geordnete Gruppe. Eine \tbf{Bewertung auf $K$} ist eine Abbildung $v : K \to G \cup \{\infty\}$ mit folgenden Eigenschaften:
+		\begin{enumerate}
+			\item $v(0) = \infty$
+			\item $g \neq 0 \implies v(g) \neq \infty$ 
+			\item $v(a \cdot_K b) = v(a) +_G v(b)$ (Bewertungen sind Gruppenhomomorphismen aus der Multiplikativen Gruppe von $K$ in $G$)
+			\item $v(a +_K b) \geq \min(v(a), v(b))$ 
+			\item $v(a) = v(b) \implies v(a +_K b) > \min(v(a), v(b))$
+			\item $v(a) \neq v(b) \implies v(a +_K b) = \min(v(a), v(b))$
+		\end{enumerate}
+	\end{definition}
+	\fi
+	\begin{definition}
+		Sei $p$ eine Primzahl. Die \tbf{$p$-adische Bewertung} auf $\bZ$ ist folgende Abbildung:
+		\begin{align*}
+			\nu_p(n) = 
+			\begin{cases}
+				\max\{k \in \bN_0 : p^k \mid n\} & n \neq 0\\
+				\infty & n = 0
+			\end{cases}
+		\end{align*}
+	\end{definition}
+	\begin{example}
+		Es gilt $\nu_5(75) = \nu_5(3 \cdot 5^2) = 5^2 = 25$ und $\nu_5(50) = \nu_5(2 5^2) = 5^2 = 25$. Für die Summe gilt $\nu_5(125) = \nu_5(5^3) = 5^3$.
+	\end{example}
+	Intuitiv gibt uns die $p$-adische Bewertung einer ganzen Zahl $n$ also die größte Potenz von $p$, durch die $n$ teilbar ist.
+	\newpar
+	Die $p$-adische Bewertung ist das Standardbeispiel einer Bewertung. Es existieren viele andere wichtige Bewertungen in der kommutativen Algebra, in der komplexen Analysis und in der algebraischen Geometrie, diese sind allerdings in der Regel leider nichttrivial und würden den Rahmen dieses Proseminarvortrags sprengen.\\
+	\begin{definition}
+		Wir erweitern die $p$-adische Bewertung auf ganz $\bQ$ durch:
+		\begin{align*}
+			\nu_p\left(\frac{r}{s}\right) = \nu_p(r) - \nu_p(s)
+		\end{align*}
+	\end{definition}
+	\begin{definition}
+		Wir definieren den $p$-adischen Betrag $\abs{-}_p$ auf $\bQ$ durch:
+		\begin{align*}
+			\abs{n}_p = \frac{1}{p^{\nu_p(n)}}
+		\end{align*}
+	\end{definition}
+	\begin{theorem}
+		Der $p$-adische Betrag erfüllt die \tbf{ultrametrische Dreiecksungleichung}:
+		\begin{align*}
+			\abs{x + y} \leq \max(\abs{x},  \abs{y})
+		\end{align*}
+		Wir nennen einen solchen Betrag \tbf{nichtarchimedisch}.
+	\end{theorem}
+	\begin{proposition}
+		\theoremname{Satz von Ostrowski:} Jeder Betrag auf $\bQ$ ist entweder:
+		\begin{itemize}
+			\item Der triviale Betrag $\abs{x}_0 = 
+			\begin{cases}
+				0 & x = 0_K\\
+				1 & x \neq 0_K\\
+			\end{cases}$, 
+			\item oder äquivalent zu $\abs{-}_p$ für eine Primzahl $p$, 
+			\item oder äquivalent zum Standardabsolutbetrag $\abs{-}$.
+		\end{itemize} 
+	\end{proposition}
+	\chapter{Die $p$-adischen Zahlen}
+	\section{Konstruktion der $p$-adischen Zahlen}
+	\begin{definition}
+		Wir bezeichnen die Vervollständigung des Rings $\bZ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} ganzen Zahlen $\bZ_p$. Analog bezeichnen wir die Vervollständigung des Rings $\bQ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} Zahlen $\bQ_p$
+	\end{definition}
+	\noindent Wir erhalten die gefragten Vervollständigungen durch eine Äquivalenzklassenkonstruktion von Cauchyfolgen, in der Cauchyfolgen äquivalent sind, wenn ihre Differenz eine Nullfolge ist, analog zur Konstruktion von $\bR$ als Vervollständigung gemäß des Standardabsolutbetrags.
+	\begin{proposition}
+		$\bZ_p$ ist ein Ring, der $\bZ$ als dichte Teilmenge enthält. $\bQ_p$ ist ein Körper, der $\bQ$ als dichte Teilmenge enthält.
+	\end{proposition}
+	\begin{proposition}
+		\begin{align*}
+			\bZ_p = \{z \in \bQ_p : \abs{z}_p \leq 1\} = \{z \in \bQ_p : \nu_p(z) \geq 0\}
+		\end{align*}
+	\end{proposition}
+	\begin{proposition}
+		Jede Reihe der Form
+		\begin{align*}
+			x = \sum_{n = m}^\infty d_n p^n,
+		\end{align*}
+		wobei $m \in \bZ$, $d_n \in \bZ / p\bZ$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}.
+	\end{proposition}
+	\noindent Wir schreiben eine $p$-adische Zahl $z$ analog zur Standarddarstellung Basis $p$ als 
+	\begin{align*}
+		z = \hdots d_4 d_3 d_2 d_1 d_0, d_{-1} \hdots d_{-m}
+	\end{align*}
+	mit der kleinsten Ziffer rechts. In manchen Quellen werden $p$-adische Zahlen umgekehrt geschrieben, mit der kleinsten Ziffer links.
+	\newpar
+	\noindent Die $p$-adischen ganzen Zahlen sind genau die $p$-adischen Zahlen mit $m = 0$. Die Zahlen $\bZ \subsetneq \bZ_p$ sind genau die Zahlen, deren $p$-adische Darstellungen endlich sind, und diese Darstellung ist genau die Übliche.
+	\begin{example}
+		Wir wollen die $2$-adische Darstellung von $-1$ finden.
+		\newpar
+		Wir brauchen also eine Folge $d_n$, sodass für jedes $n$
+		\begin{align*}
+			d_0 + d_1 2 + \hdots + d_n 2^n \equiv -1 \mod 2^{n+1}
+		\end{align*}
+		Für $n = 0$ erhalten wir:
+		\begin{align*}
+			-d_0 \equiv -1 \mod 2
+		\end{align*}
+		also $d_0 = 1$. Wir wollen induktiv Zeigen, dass alle anderen Ziffern ebenfalls $1$ sind. Angenommen, $d_0 = d_1 = \hdots = d_{n-1} = 1$. Dann gilt:
+		\begin{align*}
+			d_0 + 2d_1 + \hdots + 2^nd_n  = \left(\sum_{i = 0}^{n-1} 2^i + d_n 2^n\right) 
+			&\equiv -1 \mod 2^{n+1}\\
+			\implies \qquad (2^n - 1) - d_n 2^n &\equiv -1 \mod 2^{n+1}\\
+			\implies \qquad 2^n - d_n 2^n  &\equiv 0 \mod 2^{n+1}\\
+			\implies \qquad 1 - d_n &\equiv 0 \mod 2^{n+1}
+		\end{align*}
+		Also $d_n = 1$. Die $2$-adische Darstellung von $-1$ ist also $\hdots1111$.
+	\end{example}
+	\begin{proposition}
+		Als Hausaufgabe: In der $p$-adische Darstellung von $-1$ für beliebiges $p$ ist jede Ziffer $p-1$. Die $5$-adische Darstellung ist also $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$.
+	\end{proposition}
+	\noindent (Hier Bezug zum Zweierkomplement in der Informatik ziehen)
+	\chapter{Das Henselsche Lemma}
+	Das Henselsche Lemma ist eine Methode, um Polynomgleichungen in $\bZ_p$ zu lösen. Es liefert uns somit insbesondere eine einfache Möglichkeit, die $p$-adische Darstellung bestimmter algebraischer Zahlen zu finden.
+	\begin{theorem}
+		Sei 
+		\begin{align*}
+			f(x) = \sum_{i = 0}^n c_i x^i
+		\end{align*}
+		ein Polynom mit Koeffizienten $c_i \in \bZ_p$. Sei $f'(x)$ die Ableitung von $f(x)$, also
+		\begin{align*}
+			f'(x) = \sum_{i = 0}^{n-1} ic_{i+1} x^i
+		\end{align*}
+		Sei außerdem $a \in \bZ_p$, sodass:
+		\begin{align*}
+			f(a) \equiv 0 &\mod p\\
+			f'(a) \not\equiv 0 &\mod p
+		\end{align*}
+		Dann existiert ein eindeutiges $\alpha \in \bZ_p$, sodass:
+		\begin{align*}
+			\begin{array}{rll}
+				f(\alpha) &= 0\\
+				\alpha &\equiv a &\mod p
+			\end{array}
+		\end{align*}
+	\end{theorem}
+	\begin{proof}
+		Wir konstruieren eine eindeutige Folge $a_n$ in $\bZ_p$, sodass:
+		\begin{enumerate}
+			\item $f(a_n) \equiv 0 \mod p^{n + 1}$
+			\item $a_n \equiv a_{n - 1} \mod p$
+			\item $a_n \in  \{0, \hdots, p^{n+1} - 1\}$
+		\end{enumerate}
+	\noindent Daraufhin werden wir zeigen, dass $\displaystyle \lim_{n \to \infty} a_n = \alpha$.
+	\newpar
+	Sei erst einmal als Induktionsbasis $a_0 \in \{0, \hdots, p - 1\}$ mit $a_0 \equiv a \mod p$.
+	\newpar
+	Seien nun $a_0, \hdots, a_{n-1}$ bereits mit den gewünschten Eigenschaften konstruiert.
+	Aus ii.) folgt, dass $a_n$ die Form $a_{n-1} + b_np$ haben muss, und aus iii.) folgt $b_n \in \{0, \hdots, p^n-1\}$.
+	\newpar 
+	Also gilt:
+	\begin{align*}
+		f(a_n) = f(a_{n - 1} + b_np^n) &= \sum_{i = 0}^n c_i(a_{n - 1} + b_np^n)^i\\
+			                         &\equiv \sum_{i = 0}^n c_i(a_{n-1}^i + i(a_{n-1}^{i-1})(b_np^n)) \mod p^{n+1} \quad\text{(Binomischer Lehrsatz)}\\
+			                    	 &= \sum_{i = 0}^n c_ia_{n-1}^i + \left(\sum_{i = 0}^nic_i a_{n-1}^{i-1}\right)b_np^n\\
+			                    	 &= f(a_{n-1}) + f'(a_{n-1}) b_n p^n
+	\end{align*}
+	(Dies ist eine Taylorapproximation erster Ordnung - wir sehen, dass diese in diesem Fall exakt ist!)
+	\newpar
+	Da $f(a_{n-1}) \equiv 0 \mod p^n$ per Annahme gilt $f(a_{n-1}) \equiv kp \mod p^n$ für ein $k \in \{0, \hdots, p-1\}$.
+	\newpar
+	Für $f(a_n) \equiv 0 \mod p^{n+1}$ brauchen wir also $kp + f'(a_0) b_n p^n \equiv 0 \mod p^{n+1}$. Klammern wir $p$ aus, sehen wir dass dies gegeben ist, falls:
+	\begin{align*}
+		k + f'(a_{n-1}) b_n \equiv 0 &\mod p\\
+		\implies f'(a_{n-1}) b_n \equiv -k &\mod p\\
+	\end{align*}
+	Es gilt per Induktionsannahme $a_{n-1} \equiv a_0 \mod p$, also $f'(a_{n-1}) \equiv f'(a_0) \not\equiv 0 \mod p$, also existiert die Lösung
+	\begin{align*}
+		b_n \equiv -\frac{k}{f'(a_{n-1})} \mod p
+	\end{align*}
+	Es bleibt noch zu Zeigen, dass $\alpha = a_0 + b_1p + b_2p^2 \hdots$ eine exakte $p$-adische Lösung ist. 
+	\newpar
+	Es gilt $\alpha \equiv a_0 \equiv a \mod p$, und es gilt $f(\alpha) \equiv 0 \mod p^n$ für alle $n$, also $\abs{f(\alpha)}_p < \frac{1}{p^n}$ für alle $n$, also $\abs{f(\alpha)}_p = 0$. Somit ist $\alpha$ tatsächlich eine Lösung.
+	\newpar
+	Es bleibt noch die Eindeutigkeit der Lösung zu zeigen. Angenommen, $\beta$ sei eine weitere Lösung, also $f(\beta) = 0$ und $\beta \equiv a \mod p$. Aus der zweiten Bedingung folgt bereits $\alpha \equiv \beta \mod p$.
+	\newpar
+	Angenommen, $\alpha \equiv \beta \mod p^n$. Dann gilt $\beta = \alpha + p^n \gamma_n$ mit $\gamma_n \in \bZ_p$. Dieselbe Polynomerweiterung, welche bereits im bereits im Beweis verwendet wurde, liefert:
+	\begin{align*}
+		f(\beta) = f(\alpha + p^n \gamma_n) \equiv f(\alpha) + f'(\alpha)p^n\gamma_n \mod p^{n + 1}
+	\end{align*}
+	Es gilt $f(\beta) = 0$, also $f'(\alpha)\gamma_n \equiv 0 \mod p$. Wir wissen $f'(\alpha) \equiv f'(a) \not \equiv 0 \mod p$, also $\gamma_n \equiv 0 \mod p$, also $\alpha \equiv \beta \mod p^{n + 1}$.
+	\newpar
+	Somit gilt $\alpha = \beta$, also ist die Lösung eindeutig.
+	\end{proof}
+	\section{Konstruktion $p$-adischer Darstellungen}
+	Hensel's Lemma liefert uns einen praktischen Weg, $p$-adische Darstellungen vieler algebraischer Zahlen zu konstruieren.
+	\iffalse
+	\begin{application}
+		Wir wollen die $2$-adische Darstellung von $-1$ bestimmen. Wir zeigen Induktiv, dass jede Ziffer $1$ ist. Wir betrachten zuerst das Polynom $f(x) = x + 1$. Es gilt $f'(x) = 1 \not\equiv 0 \mod 2$. Es gilt außerdem $f(1) = 2 \equiv 0 \mod 2$. Wähle also $a_0 = 1$.
+		\newpar
+		Es gilt $f(1) = 2 \overset{!}{\equiv} k \cdot 2 \mod 2^2 \implies k = 1$, also $b_1 \equiv -1 \mod 2 = 1$. Sei nun angenommen, $a_0 = \hdots = a_{n-1} = 1$. Dann gilt:
+		\begin{align*}
+			f(b_{n-1}2^{n-1} + \hdots + b_1 2 + a_0) = f\left(\sum_{i = 1}^{n-1} 2^i\right) = 2^n - 1 + 1 = 2^n \overset{!}{\equiv} k \cdot 2^{n} \mod 2^{n+1}
+		\end{align*}
+		also wieder $k = 1$ und $b_n = 1$.
+		\newpar
+		Die $2$-adische Darstellung von $-1$ ist also $\hdots11111$.
+	\end{application}
+	\begin{application}
+		Bezug zum Zweierkomplement in der Informatik.
+	\end{application}
+	\begin{proposition}
+		In der $p$-adische Darstellung von $-1$ ist jede Ziffer $p-1$. Die $5$-adische Darstellung ist also $\hdots44444$, die $7$-adische Darstellung ist $\hdots66666$, und so weiter.
+	\end{proposition}
+	\fi
+	\begin{example}
+		Wir wollen $\sqrt{2} \in \bZ_7$ finden. Sei also $f(x) = x^2 - 2$, also $f'(x) = 2x$. Wir suchen zuerst unser $a = a_0$. Da $f'(a) \not\equiv 0 \mod 7$ brauchen wir $2a \not\equiv 0$. Die Bedingung $f(a) \equiv 0 \mod 7$ liefert:
+		\begin{align*}
+			a^2 - 2 \equiv 0 \mod 7
+		\end{align*}
+		also $a^2 \equiv 2 \mod 7$. Eine Möglichkeit ist $3$, eine weitere Möglichkeit ist $4 \equiv -3 \mod 7$. Da also Nullstellen existieren, garantiert das Henselsche Lemma eine Lösung - wir haben also eine irrationale reelle Zahl gefunden, welche in den $p$-adischen ganzen Zahlen enthalten sind.
+		\newpar
+		Wir wollen nun die letzten paar Ziffern berechnen. Wir entscheiden uns für die positive Wurzel. Nun wollen wir $k$ bestimmen, sodass
+		\begin{align*}
+			f(3) = 7 \equiv 7k \mod 49
+		\end{align*}
+		Es reicht also $k = 1$. Nun gilt:
+		\begin{align*}
+			b_1 &\equiv -\frac{1}{f'(3)} \mod 7\\
+			\implies b_1 &\equiv -\frac{1}{6} \mod 7\\
+			\implies 6b_1 + 1 &\equiv 0 \mod 7\\
+			\implies b_1 = 1\\
+		\end{align*}
+		Also $a_1 = 3 + 1 \cdot 7 = 10$.
+		Für die dritte Ziffer brauchen wir $f(a_1) = f(10) = 98 \equiv 49k \mod 343$, also $k = 2$. Nun gilt:
+		\begin{align*}
+			b_2 &\equiv -\frac{2}{f'(10)} \mod 7 \\
+				&\equiv -\frac{2}{20} \mod 7 \\
+				&\equiv -\frac{1}{10} \mod 7 \\
+			\implies 10b_2 + 1 &\equiv 0 \mod 7\\
+			\implies 3b_2 + 1 &\equiv 0 \mod 7\\
+			\implies b_2 &\equiv 2 \mod 7\\
+		\end{align*} 
+		Also $a_2 = 3 + 1 \cdot 7 + 2 \cdot 7^2 = 108$.
+		\newpar
+		Die $7$-adische Darstellung von $\sqrt{2}$ endet also in $\hdots213$.
+	\end{example}
+	\begin{application}
+		Eine $p$-adische Zahl $u$ hat eine $k$-te Wurzel in den $p$-adischen Zahlen, wenn $k \not \equiv 0 \mod p$ und eine Zahl $n$ mit $n \equiv u \mod p$ existiert, sodass $n$ eine $k$-te Wurzel in $\bZ / p\bZ$ hat.
+	\end{application}
+	\begin{proof}
+		Wähle $f(x) = x^k - u$. So gilt $f'(x) = kx \not \equiv 0$, und das Henselsche Lemma garantiert eine Lösung, falls wir eine initiale Nullstelle $n = x^k \equiv u \mod p$ finden können
+	\end{proof}
+	\begin{application}
+		$i = \sqrt{-1} \in \bZ_3$
+	\end{application}
+	\begin{proof}
+		Wähle $f(x) = x^2 + 1$, also $f'(x) = 2x$. Wir wollen $x^2 \equiv -1 \equiv 2 \mod 3$. Unsere Möglichkeiten sind also wieder $3$ und $4$, wir wählen wieder $a_0 = a = 3$. Es gilt $f'(x) = 6 \not\equiv 0 \mod 7$, also existiert eine eindeutige $p$-adische Erweiterung von $a$, deren Quadrat $-1$ ist.
+	\end{proof}
+	\iffalse
+	\section{Eine verallgemeinerte Version}
+	Unsere erste Version des Henselschen Lemmas erlaubt uns nicht, Wurzeln mit Vielfachheiten größer als $1$ als die initiale Approximation zu verwenden. Wir beweisen nun eine allgemeinere Version, welche uns außerdem eine Abschätzung des $p$-adischen Abstands zwischen der Approximation und der exakten Lösung gibt:
+	\begin{theorem}
+		Sei 
+		\begin{align*}
+			F(x) = \sum_{i = 0}^n c_i x^i
+		\end{align*}
+		ein Polynom mit Koeffizienten $c_i \in \bZ_p$. Sei $F'(x)$ die Ableitung von $F(x)$, also
+		\begin{align*}
+			F'(x) = \sum_{i = 0}^{n-1} c_{i+1} x^i
+		\end{align*}
+		Sei außerdem $a_0 \in \bZ_p$, sodass:
+		\begin{align*}
+			\abs{F(a_0)}_p < \abs{F'(a_0)}_p^2 
+		\end{align*}
+		Dann existiert ein eindeutiges $a \in \bZ_p$, sodass:
+		\begin{align*}
+				F(a) &= 0\\
+				\abs{a - a_0}_p & = \abs{\frac{F(a_0)}{F'(a_0)}}_p < \abs{F'(a)}_p\\
+				\abs{F'(a)}_p &= \abs{F'(a_0)}_p
+		\end{align*}
+	\end{theorem}
+	\fi
+	\appendix
+	\chapter{Quellen}
+	Hauptquellen sind "p-adic Numbers, p-adic Analysis and Zeta Functions", geschrieben von Neal Koblitz, "Algebraic Number Theory", geschrieben von Jürgen Neukirch, und Keith Conrads Notizen zum Henselschen Lemma. Eine weiter Quelle ist \href{https://math.uchicago.edu/~may/REU2020/REUPapers/Zheng,Yiduan.pdf}{$p$-adic Numbers, $Q_p$ and Hensels Lemma}, geschrieben von Yiduan Zheng.
+\end{document}
