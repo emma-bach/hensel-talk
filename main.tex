@@ -91,7 +91,7 @@
 	Es ist außerdem $152 = 2 \cdot 64 + 1 \cdot 16 + 2 \cdot 4 + 0$, also ist $[152]_{10} = [2120]_4$.
 	\newpar
 	Zählen in Basen ungleich $10$ funktioniert ähnlich wie in Basis $10$, nur dass man eben eine Ziffer nach links übertragen muss, wenn man $b$ erreicht (statt 10). Die Natürlichen Zahlen in Basis $3$ sind somit $0,1,2,10,11,12,20,21,22,100,\hdots$
-	\chapter{Bewertungen und Metriken auf ${\bZ}$}
+	\chapter{Alternative Topologien auf $\bZ$ und ${\bQ}$}
 	Wir betrachten die Folge:
 	\begin{align*}
 		a_n = 10^n
@@ -109,7 +109,10 @@
 	\end{align*}
 	Ein analoges "Konvergenzverhalten" sehen wir für eine beliebige Folge der Form $a_n = p^n$, solange wir die Zahlen in Basis $p$ schreiben.
 	\newpar
-	Unser erstes Ziel in diesem Vortrag, wird es sein, diese Form von Konvergenz und die daraus entstehenden "Zahlen mit unendlich vielen Stellen vor dem Komma" zu formalisieren. Wir werden eine Familie von Metriken $\abs{-}_p$ einführen, sodass in jeder Metrik $\abs{-}_p$ die Folge $a_n = p^n$ tatsächlich zur Nullfolge wird.
+	Unser erstes Ziel in diesem Vortrag, wird es sein, diese Form von Konvergenz und die daraus entstehenden "Zahlen mit unendlich vielen Stellen vor dem Komma" zu formalisieren. Wir werden eine Familie von Metriken $\abs{-}_p$ einführen, sodass in jeder Metrik $\abs{-}_p$ die Nullfolgen genau die Folgen sind, in denen die Basis-$p$-Darstellung immer späterer Folgenglieder in immer mehr Nullen endet.
+	\newpar
+	Genau so, wie in den reellen Zahlen in der Folge $0.1^n$ die $1$ "verschwindet", indem sie unendlich weit "nach rechts wandert", und die Folge somit gegen $0$ konvergiert, kann dann in unserem neuen Zahlensystem die $1$ "verschwinden", indem sie "unendlich weit nach links wandert".
+	\clearpage
 	\section{Der $p$-adische Betrag}
 	\begin{definition}
 		Sei $K$ ein Körper. Seien $x,y \in K$. Ein \tbf{Betrag} auf $K$ ist eine Funktion $\abs{-} : K \to \bR$ mit folgenden Eigenschaften:
@@ -128,11 +131,6 @@
 		\end{align*}
 		eine Metrik auf $K$.
 	\end{proposition}
-	Sei $(G, +, \geq)$ eine linear geordnete Gruppe. Wir fügen zu $G$ ein Element $\infty$ hinzu, welches die erwarteten Eigenschaften bezüglich der Ordnung und Gruppenoperation hat:
-	\begin{itemize}
-		\item $\forall g \in G : \infty \geq g$
-		\item $\forall g \in G : \infty + g = g + \infty = \infty + \infty = \infty$
-	\end{itemize}
 	\iffalse
 	\begin{definition}
 		Sei $K$ ein Körper und  $G$ eine linear geordnete Gruppe. Eine \tbf{Bewertung auf $K$} ist eine Abbildung $v : K \to G \cup \{\infty\}$ mit folgenden Eigenschaften:
@@ -149,15 +147,22 @@
 	\begin{definition}
 		Sei $p$ eine Primzahl. Die \tbf{$p$-adische Bewertung} auf $\bZ$ ist folgende Abbildung:
 		\begin{align*}
-			\nu_p(n) = 
+			v_p(n) = 
 			\begin{cases}
 				\max\{k \in \bN_0 : p^k \mid n\} & n \neq 0\\
 				\infty & n = 0
 			\end{cases}
 		\end{align*}
+		Die $p$-adische Bewertung ist auch bekannt als die \tbf{Vielfachheit von $p$ in $n$}.
 	\end{definition}
 	\begin{example}
-		Es gilt $\nu_5(75) = \nu_5(3 \cdot 5^2) = 5^2 = 25$ und $\nu_5(50) = \nu_5(2 5^2) = 5^2 = 25$. Für die Summe gilt $\nu_5(125) = \nu_5(5^3) = 5^3$.
+		Es gilt:
+		\begin{itemize}
+			\item $v_5(25) = v_5(5^2) = 2$
+			\item $v_5(50) = v_5(2 \cdot 5^2) = 2$.
+			\item $v_5(25 + 50) = v_5(75) = v_5(3 \cdot 5^2) = 2$
+			\item $v_5(50 + 75) = v_5(125) = v_5(5^3) = 3$.
+		\end{itemize} 
 	\end{example}
 	Intuitiv gibt uns die $p$-adische Bewertung einer ganzen Zahl $n$ also die größte Potenz von $p$, durch die $n$ teilbar ist.
 	\newpar
@@ -165,22 +170,57 @@
 	\begin{definition}
 		Wir erweitern die $p$-adische Bewertung auf ganz $\bQ$ durch:
 		\begin{align*}
-			\nu_p\left(\frac{r}{s}\right) = \nu_p(r) - \nu_p(s)
+			v_p\left(\frac{r}{s}\right) = v_p(r) - v_p(s)
 		\end{align*}
 	\end{definition}
+	\noindent Dies entspricht der Potenz von $p$, die wir erhalten, wenn wir alle Potenzen von $p$ aus dem Bruch "rausziehen".
+	\begin{example}
+		\begin{align*}
+			v_5\left(\frac{75}{125}\right) &= 2 - 3 = -1
+		\end{align*}
+		bzw.
+		\begin{align*}
+			v_5\left(\frac{75}{125}\right) &= v_5\left(\frac{3}{5}\right)\\ &= v_5\left(5^{-1} \cdot \frac{3}{1}\right)\\
+			&= -1
+		\end{align*}
+	\end{example}
 	\begin{definition}
 		Wir definieren den $p$-adischen Betrag $\abs{-}_p$ auf $\bQ$ durch:
-		\begin{align*}
-			\abs{n}_p = \frac{1}{p^{\nu_p(n)}}
+		\begin{align*} 
+			\abs{n}_p = \frac{1}{p^{v_p(n)}}
 		\end{align*}
 	\end{definition}
+	\noindent Der $p$-adische Betrag einer rationalen Zahl ist also genau dann gering, wenn ihre Darstellung in Basis $p$ in vielen aufeinanderfolgenden Nullen endet.
+	\newpar
+	Wir notieren die dazugehörige Metrik als $d_p(x,y)$. In dieser Metrik sind zwei Zahlen genau dann nah aneinander, wenn für ein Großes $n$ die letzten $n$ Ziffern ihrer Darstellung in Basis $p$ identisch sind.
+	\begin{example}
+		\begin{align*}
+			d_2(24, 25) &= d_2([11.000]_2,[11.001]_2)\\
+			 			&= \abs{1}_2\\ 
+			 			&= \frac{1}{2^0}\\ 
+			 			&= 1\\\\
+			d_2(24, 1816) &= \abs{1792}_2\\ 
+						  &= \abs{7 \cdot 2^8}\\
+						  &= \frac{1}{2^8} = \frac{1}{256}\\\\
+			d_2(24, 1816) &= d_2([11.000]_2, [11100011000]_2)\\
+						  &= \Big|[-11.100.000.000]_2\Big|_2\\
+						  &= \frac{1}{2^8} = \frac{1}{256}\\
+		\end{align*}
+	\end{example}
 	\begin{theorem}
 		Der $p$-adische Betrag erfüllt die \tbf{ultrametrische Dreiecksungleichung}:
 		\begin{align*}
-			\abs{x + y} \leq \max(\abs{x},  \abs{y})
+			\abs{x + y}_p \leq \max(\abs{x}_p,  \abs{y}_p)
 		\end{align*}
 		Wir nennen einen solchen Betrag \tbf{nichtarchimedisch}.
 	\end{theorem}
+	\begin{example}
+		\begin{align*}
+			\abs{54}_3 &= \abs{2 \cdot 2^3} = \frac{1}{27}\\
+			\abs{81}_3 &= \abs{3^5}_3 = \frac{1}{81}\\
+			\abs{54 + 81}_3 &= \abs{135}_3 = \abs{5 \cdot 3^3}_3 = \frac{1}{27}
+		\end{align*}
+	\end{example}
 	\begin{proposition}
 		\theoremname{Satz von Ostrowski:} Jeder Betrag auf $\bQ$ ist entweder:
 		\begin{itemize}
@@ -212,11 +252,11 @@
 		\begin{align*}
 			x = \sum_{n = m}^\infty d_n p^n,
 		\end{align*}
-		wobei $m \in \bZ$, $d_n \in \bZ / p\bZ$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}.
+		wobei $m \in \bZ_{\leq 0}$, $d_n \in \bZ / p\bZ$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}.
 	\end{proposition}
 	\noindent Wir schreiben eine $p$-adische Zahl $z$ analog zur Standarddarstellung Basis $p$ als 
 	\begin{align*}
-		z = \hdots d_4 d_3 d_2 d_1 d_0, d_{-1} \hdots d_{-m}
+		z = \hdots d_4 d_3 d_2 d_1 d_0, d_{-1} \hdots d_{m}
 	\end{align*}
 	mit der kleinsten Ziffer rechts. In manchen Quellen werden $p$-adische Zahlen umgekehrt geschrieben, mit der kleinsten Ziffer links.
 	\newpar
@@ -245,7 +285,7 @@
 	\begin{proposition}
 		Als Hausaufgabe: In der $p$-adische Darstellung von $-1$ für beliebiges $p$ ist jede Ziffer $p-1$. Die $5$-adische Darstellung ist also $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$.
 	\end{proposition}
-	\noindent (Hier Bezug zum Zweierkomplement in der Informatik ziehen)
+	\noindent Diese Darstellung ist tatsächlich analog zur Darstellung negativer Zahlen in binär in den eisten modernen Computern. Negative Zahlen werden in der Regel im \tbf{Zweierkomplement} dargestellt, was bedeutet, dass das höchstmögliche Bit negativ gezählt wird. Da wir hierfür vorher ein "höchstmögliches Bit" wählen müssen, ist unser Zahlenbereich beschränkt, und die Addition großer Zahlen kann zu Problemen wie dem bekannten \textit{Integer Overflow} führen. Die $p$-adischen Zahlen lösen dieses Problem, indem sie Zahlen erlauben, die beliebig Hochwertige Ziffern enthalten.
 	\chapter{Das Henselsche Lemma}
 	Das Henselsche Lemma ist eine Methode, um Polynomgleichungen in $\bZ_p$ zu lösen. Es liefert uns somit insbesondere eine einfache Möglichkeit, die $p$-adische Darstellung bestimmter algebraischer Zahlen zu finden.
 	\begin{theorem}
@@ -318,6 +358,7 @@
 	\newpar
 	Somit gilt $\alpha = \beta$, also ist die Lösung eindeutig.
 	\end{proof}
+	\clearpage
 	\section{Konstruktion $p$-adischer Darstellungen}
 	Hensel's Lemma liefert uns einen praktischen Weg, $p$-adische Darstellungen vieler algebraischer Zahlen zu konstruieren.
 	\iffalse
