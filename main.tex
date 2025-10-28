@@ -18,6 +18,18 @@
 \usepackage{physics}
 \usepackage{placeins}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage[many]{tcolorbox}
+\tcolorboxenvironment{proof}{
+	colback=black!5!white,
+	boxrule=0pt,
+	sharp corners,
+	breakable,
+	enhanced,
+}
+
 %hyperref should be last apparently
 \usepackage{hyperref}
 
@@ -164,7 +176,7 @@
 			\item $v_5(50 + 75) = v_5(125) = v_5(5^3) = 3$.
 		\end{itemize} 
 	\end{example}
-	Intuitiv gibt uns die $p$-adische Bewertung einer ganzen Zahl $n$ also die größte Potenz von $p$, durch die $n$ teilbar ist.
+	\noindent Intuitiv gibt uns die $p$-adische Bewertung einer ganzen Zahl $n$ also die größte Potenz von $p$, durch die $n$ teilbar ist.
 	\newpar
 	Die $p$-adische Bewertung ist das Standardbeispiel einer Bewertung. Es existieren viele andere wichtige Bewertungen in der kommutativen Algebra, in der komplexen Analysis und in der algebraischen Geometrie, diese sind allerdings in der Regel leider nichttrivial und würden den Rahmen dieses Proseminarvortrags sprengen.\\
 	\begin{definition}
@@ -252,7 +264,7 @@
 		\begin{align*}
 			x = \sum_{n = m}^\infty d_n p^n,
 		\end{align*}
-		wobei $m \in \bZ_{\leq 0}$, $d_n \in \bZ / p\bZ$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}.
+		wobei $m \in \bZ_{\leq 0}$, $d_n \in \{0,1,\hdots,p-1\}$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}. Jede $p$-adische Zahl kann als eine solche Reihe dargestellt werden.
 	\end{proposition}
 	\noindent Wir schreiben eine $p$-adische Zahl $z$ analog zur Standarddarstellung Basis $p$ als 
 	\begin{align*}
@@ -322,20 +334,20 @@
 	Sei erst einmal als Induktionsbasis $a_0 \in \{0, \hdots, p - 1\}$ mit $a_0 \equiv a \mod p$.
 	\newpar
 	Seien nun $a_0, \hdots, a_{n-1}$ bereits mit den gewünschten Eigenschaften konstruiert.
-	Aus ii.) folgt, dass $a_n$ die Form $a_{n-1} + b_np$ haben muss, und aus iii.) folgt $b_n \in \{0, \hdots, p^n-1\}$.
+	Aus ii.) folgt, dass $a_n$ die Form $a_{n-1} + b_np^n$ haben muss, und aus iii.) folgt $b_n \in \{0, \hdots, p-1\}$.
 	\newpar 
 	Also gilt:
 	\begin{align*}
 		f(a_n) = f(a_{n - 1} + b_np^n) &= \sum_{i = 0}^n c_i(a_{n - 1} + b_np^n)^i\\
-			                         &\equiv \sum_{i = 0}^n c_i(a_{n-1}^i + i(a_{n-1}^{i-1})(b_np^n)) \mod p^{n+1} \quad\text{(Binomischer Lehrsatz)}\\
+			                         &\equiv \sum_{i = 0}^n c_i(a_{n-1}^i + i(a_{n-1}^{i-1})(b_np^n)) \mod p^{n+1} \quad\text{(Binom. LS)}\\
 			                    	 &= \sum_{i = 0}^n c_ia_{n-1}^i + \left(\sum_{i = 0}^nic_i a_{n-1}^{i-1}\right)b_np^n\\
 			                    	 &= f(a_{n-1}) + f'(a_{n-1}) b_n p^n
 	\end{align*}
 	(Dies ist eine Taylorapproximation erster Ordnung - wir sehen, dass diese in diesem Fall exakt ist!)
 	\newpar
-	Da $f(a_{n-1}) \equiv 0 \mod p^n$ per Annahme gilt $f(a_{n-1}) \equiv kp \mod p^n$ für ein $k \in \{0, \hdots, p-1\}$.
+	Da $f(a_{n-1}) \equiv 0 \mod p^n$ per Annahme gilt $f(a_{n-1}) \equiv kp^{n} \mod p^{n+1}$ für ein $k \in \{0, \hdots, p-1\}$.
 	\newpar
-	Für $f(a_n) \equiv 0 \mod p^{n+1}$ brauchen wir also $kp + f'(a_0) b_n p^n \equiv 0 \mod p^{n+1}$. Klammern wir $p$ aus, sehen wir dass dies gegeben ist, falls:
+	Für $f(a_n) \equiv 0 \mod p^{n+1}$ brauchen wir also $kp^{n} + f'(a_0) b_n p^n \equiv 0 \mod p^{n+1}$. Klammern wir $p^n$ aus, sehen wir dass dies gegeben ist, falls:
 	\begin{align*}
 		k + f'(a_{n-1}) b_n \equiv 0 &\mod p\\
 		\implies f'(a_{n-1}) b_n \equiv -k &\mod p\\
@@ -348,7 +360,7 @@
 	\newpar
 	Es gilt $\alpha \equiv a_0 \equiv a \mod p$, und es gilt $f(\alpha) \equiv 0 \mod p^n$ für alle $n$, also $\abs{f(\alpha)}_p < \frac{1}{p^n}$ für alle $n$, also $\abs{f(\alpha)}_p = 0$. Somit ist $\alpha$ tatsächlich eine Lösung.
 	\newpar
-	Es bleibt noch die Eindeutigkeit der Lösung zu zeigen. Angenommen, $\beta$ sei eine weitere Lösung, also $f(\beta) = 0$ und $\beta \equiv a \mod p$. Aus der zweiten Bedingung folgt bereits $\alpha \equiv \beta \mod p$.
+	Es bleibt außerdem noch die Eindeutigkeit der Lösung zu zeigen. Angenommen, $\beta$ sei eine weitere Lösung, also $f(\beta) = 0$ und $\beta \equiv a \mod p$. Aus der zweiten Bedingung folgt bereits $\alpha \equiv \beta \mod p$.
 	\newpar
 	Angenommen, $\alpha \equiv \beta \mod p^n$. Dann gilt $\beta = \alpha + p^n \gamma_n$ mit $\gamma_n \in \bZ_p$. Dieselbe Polynomerweiterung, welche bereits im bereits im Beweis verwendet wurde, liefert:
 	\begin{align*}
@@ -359,8 +371,34 @@
 	Somit gilt $\alpha = \beta$, also ist die Lösung eindeutig.
 	\end{proof}
 	\clearpage
+	\section{Bezug zum Newton-Verfahren}
+	Das Newton-Verfahren im reellen Fall findet Nullstellen durch die Iteration
+	\begin{align*}
+		a_n = a_{n-1} \frac{f(a_{n-1})}{f'(a_{n-1})}
+	\end{align*}
+	Analog findet das Henselsche Lemma Nullstellen durch die Iteration
+	\begin{align*}
+		b_np^n \equiv -\frac{kp^n}{f'(a_{n-1}} \equiv -\frac{f(a_{n-1})}{f'(a_{n-1})} \mod p^{n+1}
+	\end{align*}
+	Das Henselsche Lemma ist somit auch als das "$p$-adische Newton-Verfahren" bekannt. Im reellen Newton-Verfahren kann es Fälle geben, in denen die Iteration nicht konvergiert. Wählt man zum Beispiel $f(x) = x^3 - x$ und $a_0 = \frac{1}{\sqrt{5}}$, so gilt
+	$a_n = (-1)^n \frac{1}{\sqrt{5}}$.
+	\newpar
+	Das $p$-adische Newton-Verfahren konvergiert hingegen immer.
 	\section{Konstruktion $p$-adischer Darstellungen}
-	Hensel's Lemma liefert uns einen praktischen Weg, $p$-adische Darstellungen vieler algebraischer Zahlen zu konstruieren.
+	Hensel's Lemma liefert uns einen praktischen Weg, $p$-adische Darstellungen vieler algebraischer Zahlen zu approximieren:
+	\begin{algorithm}
+		\caption{p-adische Darstellung einer Nullstelle $x$ auf $n$ Ziffern}
+		\begin{algorithmic}[1]
+			\State Bestimme $a_0$ mit $f(a_0) \equiv 0 \mod p$
+			\State $a \gets a_0$
+			\For{$i = 1, i \leq n, i++$}
+				\State Bestimme $k$ mit $f(a) \equiv kp^i \mod p^{i+1}$
+				\State Bestimme $\displaystyle b_i \equiv - \frac{k}{f'(a)} \mod p$ 
+				\State $\displaystyle a \gets a_0 + \sum_{j = 1}^i b_jp^j$
+			\EndFor
+			\State Return $a$
+		\end{algorithmic}
+	\end{algorithm}
 	\iffalse
 	\begin{application}
 		Wir wollen die $2$-adische Darstellung von $-1$ bestimmen. Wir zeigen Induktiv, dass jede Ziffer $1$ ist. Wir betrachten zuerst das Polynom $f(x) = x + 1$. Es gilt $f'(x) = 1 \not\equiv 0 \mod 2$. Es gilt außerdem $f(1) = 2 \equiv 0 \mod 2$. Wähle also $a_0 = 1$.
