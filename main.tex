@@ -18,6 +18,7 @@
 \usepackage{physics}
 \usepackage{placeins}
 
+%\usepackage[german]{babel}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
@@ -91,14 +92,15 @@
 		n = \sum_{i = 1}^j a_i \cdot (10)^i
 	\end{align*}
 	von Zehnerpotenzen schreiben lässt, wobei $a_i \in \{0,1,\hdots,9\}$.
-	Schreiben wir die Zahl "152", so meinen wir formell die Zahl "$1 \cdot 10^2 + 5 \cdot 10 + 2$
+	Schreiben wir die Zahl "152", so meinen wir formell die Zahl "$1 \cdot 10^2 + 5 \cdot 10 + 2$".
+	\newpar
 	Analog existiert jedoch eine ähnliche Darstellung für jedes $b \in \bN$:
 	\begin{align*}
 		n = \sum_{i = 1}^j a_i b^i
 	\end{align*}
 	mit $a_i \in \{0, 1, \hdots, b-1\}$.
 	\newpar
-	So ist zum Beispiel $152 = 128 + 16 + 8 = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 0 \cdot 2 + 0$. Somit ist die Binärdarstellung von $152$ $10011000$.
+	So ist zum Beispiel $152 = 128 + 16 + 8 = 1 \cdot 2^7 + 0 \cdot 2^6 + 0 \cdot 2^5 + 1 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 0 \cdot 2 + 0$. Somit ist die Binärdarstellung von $152$ $[10011000]_2$.
 	\newpar
 	Es ist außerdem $152 = 2 \cdot 64 + 1 \cdot 16 + 2 \cdot 4 + 0$, also ist $[152]_{10} = [2120]_4$.
 	\newpar
@@ -170,15 +172,17 @@
 	\begin{example}
 		Es gilt:
 		\begin{itemize}
+			\item $v_5(1) = 0$
 			\item $v_5(25) = v_5(5^2) = 2$
-			\item $v_5(50) = v_5(2 \cdot 5^2) = 2$.
-			\item $v_5(25 + 50) = v_5(75) = v_5(3 \cdot 5^2) = 2$
-			\item $v_5(50 + 75) = v_5(125) = v_5(5^3) = 3$.
+			\item $v_5(100) = v_5(4 \cdot 5^2) = 2$.
+			\item $v_5(25 + 100) = v_5(125) = v_5(5^3) = 3$.
 		\end{itemize} 
 	\end{example}
 	\noindent Intuitiv gibt uns die $p$-adische Bewertung einer ganzen Zahl $n$ also die größte Potenz von $p$, durch die $n$ teilbar ist.
 	\newpar
+	\iffalse
 	Die $p$-adische Bewertung ist das Standardbeispiel einer Bewertung. Es existieren viele andere wichtige Bewertungen in der kommutativen Algebra, in der komplexen Analysis und in der algebraischen Geometrie, diese sind allerdings in der Regel leider nichttrivial und würden den Rahmen dieses Proseminarvortrags sprengen.\\
+	\fi
 	\begin{definition}
 		Wir erweitern die $p$-adische Bewertung auf ganz $\bQ$ durch:
 		\begin{align*}
@@ -203,6 +207,12 @@
 		\end{align*}
 	\end{definition}
 	\noindent Der $p$-adische Betrag einer rationalen Zahl ist also genau dann gering, wenn ihre Darstellung in Basis $p$ in vielen aufeinanderfolgenden Nullen endet.
+	\begin{corollary}
+		Der $p$-adische Betrag einer Zahl $z$ ist genau dann $0$, wenn $\forall n \in \bN : z \equiv 0 \mod p^{n+1}$ 
+	\end{corollary}
+	\begin{proof}
+		Dann gilt $\forall n \in \bN : \abs{z} < \frac{1}{p^n}$
+	\end{proof}
 	\newpar
 	Wir notieren die dazugehörige Metrik als $d_p(x,y)$. In dieser Metrik sind zwei Zahlen genau dann nah aneinander, wenn für ein Großes $n$ die letzten $n$ Ziffern ihrer Darstellung in Basis $p$ identisch sind.
 	\begin{example}
@@ -214,7 +224,7 @@
 			d_2(24, 1816) &= \abs{1792}_2\\ 
 						  &= \abs{7 \cdot 2^8}\\
 						  &= \frac{1}{2^8} = \frac{1}{256}\\\\
-			d_2(24, 1816) &= d_2([11.000]_2, [11100011000]_2)\\
+			d_2(24, 1816) &= d_2([11.000]_2, [11.100.011.000]_2)\\
 						  &= \Big|[-11.100.000.000]_2\Big|_2\\
 						  &= \frac{1}{2^8} = \frac{1}{256}\\
 		\end{align*}
@@ -228,7 +238,7 @@
 	\end{theorem}
 	\begin{example}
 		\begin{align*}
-			\abs{54}_3 &= \abs{2 \cdot 2^3} = \frac{1}{27}\\
+			\abs{54}_3 &= \abs{2 \cdot 3^3} = \frac{1}{27}\\
 			\abs{81}_3 &= \abs{3^5}_3 = \frac{1}{81}\\
 			\abs{54 + 81}_3 &= \abs{135}_3 = \abs{5 \cdot 3^3}_3 = \frac{1}{27}
 		\end{align*}
@@ -247,10 +257,10 @@
 	\end{proposition}
 	\chapter{Die $p$-adischen Zahlen}
 	\section{Konstruktion der $p$-adischen Zahlen}
+	Erinnerung: Die Reellen Zahlen können als die "Vervollständigung der Rationalen Zahlen" definiert werden, also als die Menge aller Cauchyfolgen in $\bQ$, sodass zwei Cauchyfolgen äquivalent sind, wenn ihre Differenz eine Nullfolge ist.
 	\begin{definition}
-		Wir bezeichnen die Vervollständigung des Rings $\bZ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} ganzen Zahlen $\bZ_p$. Analog bezeichnen wir die Vervollständigung des Rings $\bQ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} Zahlen $\bQ_p$
+		Wir bezeichnen analog die Vervollständigung des Rings $\bZ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} ganzen Zahlen $\bZ_p$ und die Vervollständigung des Rings $\bQ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen} Zahlen $\bQ_p$
 	\end{definition}
-	\noindent Wir erhalten die gefragten Vervollständigungen durch eine Äquivalenzklassenkonstruktion von Cauchyfolgen, in der Cauchyfolgen äquivalent sind, wenn ihre Differenz eine Nullfolge ist, analog zur Konstruktion von $\bR$ als Vervollständigung gemäß des Standardabsolutbetrags.
 	\begin{proposition}
 		$\bZ_p$ ist ein Ring, der $\bZ$ als dichte Teilmenge enthält. $\bQ_p$ ist ein Körper, der $\bQ$ als dichte Teilmenge enthält.
 	\end{proposition}
@@ -272,7 +282,7 @@
 	\end{align*}
 	mit der kleinsten Ziffer rechts. In manchen Quellen werden $p$-adische Zahlen umgekehrt geschrieben, mit der kleinsten Ziffer links.
 	\newpar
-	\noindent Die $p$-adischen ganzen Zahlen sind genau die $p$-adischen Zahlen mit $m = 0$. Die Zahlen $\bZ \subsetneq \bZ_p$ sind genau die Zahlen, deren $p$-adische Darstellungen endlich sind, und diese Darstellung ist genau die Übliche.
+	\noindent Die $p$-adischen ganzen Zahlen sind genau die $p$-adischen Zahlen mit $m = 0$. Die Zahlen $\bZ \subsetneq \bZ_p$ sind genau die Zahlen, deren $p$-adische Darstellungen endlich sind, und diese Darstellung ist genau die übliche Darstellung Basis $p$.
 	\begin{example}
 		Wir wollen die $2$-adische Darstellung von $-1$ finden.
 		\newpar
@@ -282,22 +292,22 @@
 		\end{align*}
 		Für $n = 0$ erhalten wir:
 		\begin{align*}
-			-d_0 \equiv -1 \mod 2
+			d_0 \equiv -1 \mod 2
 		\end{align*}
 		also $d_0 = 1$. Wir wollen induktiv Zeigen, dass alle anderen Ziffern ebenfalls $1$ sind. Angenommen, $d_0 = d_1 = \hdots = d_{n-1} = 1$. Dann gilt:
 		\begin{align*}
 			d_0 + 2d_1 + \hdots + 2^nd_n  = \left(\sum_{i = 0}^{n-1} 2^i + d_n 2^n\right) 
 			&\equiv -1 \mod 2^{n+1}\\
-			\implies \qquad (2^n - 1) - d_n 2^n &\equiv -1 \mod 2^{n+1}\\
-			\implies \qquad 2^n - d_n 2^n  &\equiv 0 \mod 2^{n+1}\\
-			\implies \qquad 1 - d_n &\equiv 0 \mod 2^{n+1}
+			\implies \qquad (2^n - 1) + d_n 2^n &\equiv -1 \mod 2^{n+1}\\
+			\implies \qquad 2^n + d_n 2^n  &\equiv 0 \mod 2^{n+1}\\
+			\implies \qquad 1 + d_n &\equiv 0 \mod 2
 		\end{align*}
 		Also $d_n = 1$. Die $2$-adische Darstellung von $-1$ ist also $\hdots1111$.
 	\end{example}
 	\begin{proposition}
 		Als Hausaufgabe: In der $p$-adische Darstellung von $-1$ für beliebiges $p$ ist jede Ziffer $p-1$. Die $5$-adische Darstellung ist also $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$.
 	\end{proposition}
-	\noindent Diese Darstellung ist tatsächlich analog zur Darstellung negativer Zahlen in binär in den meisten modernen Computern. Negative Zahlen werden in der Regel im \tbf{Zweierkomplement} dargestellt, was bedeutet, dass das höchstmögliche Bit negativ gezählt wird. Da wir hierfür vorher ein "höchstmögliches Bit" wählen müssen, ist unser Zahlenbereich beschränkt, und die Addition großer Zahlen kann zu Problemen wie dem bekannten \textit{Integer Overflow} führen. Die $p$-adischen Zahlen lösen dieses Problem, indem sie Zahlen erlauben, die beliebig Hochwertige Ziffern enthalten.
+	\noindent Diese Darstellung ist tatsächlich analog zur Darstellung negativer Zahlen in binär in den meisten modernen Computern. Negative Zahlen werden in der Regel im \tbf{Zweierkomplement} dargestellt, was bedeutet, dass das höchstmögliche Bit negativ gezählt wird. Da wir hierfür vorher ein "höchstmögliches Bit" wählen müssen, ist unser Zahlenbereich beschränkt, und die Addition großer Zahlen kann zu Problemen wie dem bekannten \textit{Integer Overflow} führen. Die $p$-adischen Zahlen lösen dieses Problem, indem sie Zahlen erlauben, die beliebig Hochwertige Ziffern enthalten, und haben so trotzdem den selben Vorteil, dass sie kein Vorzeichen benötigen.
 	\chapter{Das Henselsche Lemma}
 	Das Henselsche Lemma ist eine Methode, um Polynomgleichungen in $\bZ_p$ zu lösen. Es liefert uns somit insbesondere eine einfache Möglichkeit, die $p$-adische Darstellung bestimmter algebraischer Zahlen zu finden.
 	\begin{theorem}
@@ -326,7 +336,7 @@
 		Wir konstruieren eine eindeutige Folge $a_n$ in $\bZ_p$, sodass:
 		\begin{enumerate}
 			\item $f(a_n) \equiv 0 \mod p^{n + 1}$
-			\item $a_n \equiv a_{n - 1} \mod p$
+			\item $a_n \equiv a_{n - 1} \mod p^n$
 			\item $a_n \in  \{0, \hdots, p^{n+1} - 1\}$
 		\end{enumerate}
 	\noindent Daraufhin werden wir zeigen, dass $\displaystyle \lim_{n \to \infty} a_n = \alpha$.
@@ -387,16 +397,25 @@
 	\section{Konstruktion $p$-adischer Darstellungen}
 	Hensel's Lemma liefert uns einen praktischen Weg, $p$-adische Darstellungen vieler algebraischer Zahlen zu approximieren:
 	\begin{algorithm}
-		\caption{p-adische Darstellung einer Nullstelle $x$ auf $n$ Ziffern}
-		\begin{algorithmic}[1]
-			\State Bestimme $a_0$ mit $f(a_0) \equiv 0 \mod p$
-			\State $a \gets a_0$
+		\tbf{Algorithmus:} $p$-adisches Newton-Verfahren
+		\hrule\phantom{}
+		\begin{algorithmic}
+			\State \tbf{Eingabe 1:} Polynom $f \in \bZ_p[x]$. 
+			\State \tbf{Eingabe 2:} $a_0 \in \bZ_p$, sodass $f(a_0) \equiv 0 \mod p$ und $f'(a_0) \not\equiv 0 \mod p$.
+			\State \tbf{Eingabe 3:} $n \in \bN$
+			\\
+			\State \tbf{Ausgabe:} $\alpha \in \bZ_p$, sodass $f(\alpha) \equiv 0 \mod p^{n+1}$ und $\alpha \equiv a_0 \mod p$\\
+			\phantom{}
+			\hrule
+			\\\\
 			\For{$i = 1, i \leq n, i++$}
 				\State Bestimme $k$ mit $f(a) \equiv kp^i \mod p^{i+1}$
 				\State Bestimme $\displaystyle b_i \equiv - \frac{k}{f'(a)} \mod p$ 
-				\State $\displaystyle a \gets a_0 + \sum_{j = 1}^i b_jp^j$
+				\State $\displaystyle a_i = a_{i-1} + b_ip^i$
 			\EndFor
-			\State Return $a$
+			\\\\
+			\hrule
+			\State \tbf{Ausgabe:} $\alpha \gets a$
 		\end{algorithmic}
 	\end{algorithm}
 	\iffalse
@@ -457,10 +476,10 @@
 		Wähle $f(x) = x^k - u$. So gilt $f'(x) = kx \not \equiv 0$, und das Henselsche Lemma garantiert eine Lösung, falls wir eine initiale Nullstelle $n = x^k \equiv u \mod p$ finden können
 	\end{proof}
 	\begin{application}
-		$i = \sqrt{-1} \in \bZ_3$
+		$i = \sqrt{-1} \in \bZ_5$
 	\end{application}
 	\begin{proof}
-		Wähle $f(x) = x^2 + 1$, also $f'(x) = 2x$. Wir wollen $x^2 \equiv -1 \equiv 2 \mod 3$. Unsere Möglichkeiten sind also wieder $3$ und $4$, wir wählen wieder $a_0 = a = 3$. Es gilt $f'(x) = 6 \not\equiv 0 \mod 7$, also existiert eine eindeutige $p$-adische Erweiterung von $a$, deren Quadrat $-1$ ist.
+		Wähle $f(x) = x^2 + 1$, also $f'(x) = 2x$. Wir wollen $x^2 \equiv -1 \equiv 4 \mod 5$. Die Lösungen hierzu sind $2$ und $3$. wir wählen $a_0 = a = 2$. Es gilt $f'(x) = 4 \not\equiv 0 \mod 5$, also existiert eine eindeutige $p$-adische Erweiterung von $a$, deren Quadrat $-1$ ist.
 	\end{proof}
 	\iffalse
 	\section{Eine verallgemeinerte Version}
@@ -487,6 +506,29 @@
 	\end{theorem}
 	\fi
 	\appendix
+	\chapter{Anwendungen der $p$-adischen Zahlen}
+	Die Relevanz der $p$-adischen Zahlen besteht hauptsächlich im sogennanten \tbf{Lokal-Global-Prinzip}, auch bekannt als \tbf{Hasse-Prinzip} - hiervon gibt es zwei Varianten:
+	\begin{enumerate}
+		\item Traditionell bestand das Prinzip in der Erkenntnis, dass aus der Lösbarkeit einer diophantinischen Gleichung modulo aller Primzahlen oft die generelle Lösbarkeit folgt.
+		\item Die algebraischen Zahlentheorie beruht starkt auf eine modernere Variante, in der man oft die Lösbarkeit von Problemen in sogenannten \tbf{lokalen Körpern} ($\bQ$ ist ein Beispiel) aus der Lösbarkeit in deren Vervollständigungen (Im Fall $\bQ$ also $\bR$ und $\bQ_p$) folgert.
+	\end{enumerate}
+	Das Prinzip wird zum Beispiel im folgenden Satz klar:
+	\begin{proposition}
+		\theoremname{Satz von Hasse-Minkowski:} Sei $f$ eine quadratische Form über $\bQ$. So hat $f = 0$ genau dann eine nichttriviale Lösung in $\bQ$, wenn es nichttriviale Lösungen in $\bR$ und in jedem $\bQ_p$ hat.
+	\end{proposition}
+	\newpar
+	Hier eine Sammlung einiger Sätze, deren Beweise $p$-adische Zahlen benötigen, obwohl die Sätze selbst nicht direkt etwas mit ihnen zu tun haben:
+	\begin{proposition}
+		\theoremname{Satz von Monsky:} Es ist nicht möglich, ein Quadrat in eine ungerade Anzahl an Dreiecken gleicher Fläche zu unterteilen.
+	\end{proposition}
+	\noindent Der Beweis färbt die Punkte des Quadrats basierend auf ihrer $2$-adischen Bewertung und führt die Eigenschaften, die eine solche Färbung unter den gegebenen Bedingungen haben muss, zu einem Widerspruch.
+	\begin{proposition}
+		\theoremname{Satz von Skolem:} Sei $u_n$ eine Folge komplexer Zahlen, sodass jedes Folgenglied eine Linearkombination der vorherigen Glieder ist. So ist die Nullstellenmenge 
+		\begin{align*}
+			Z = \{n \in \bN \mid u_n = 0\}
+		\end{align*}
+		eine endliche Vereinigung arithmetischer Folgen (also von Folgen mit konstantem Abstand).
+	\end{proposition}
 	\chapter{Quellen}
 	Hauptquellen sind "p-adic Numbers, p-adic Analysis and Zeta Functions", geschrieben von Neal Koblitz, "Algebraic Number Theory", geschrieben von Jürgen Neukirch, und Keith Conrads Notizen zum Henselschen Lemma. Eine weiter Quelle ist \href{https://math.uchicago.edu/~may/REU2020/REUPapers/Zheng,Yiduan.pdf}{$p$-adic Numbers, $Q_p$ and Hensels Lemma}, geschrieben von Yiduan Zheng.
 \end{document}

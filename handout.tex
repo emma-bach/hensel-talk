@@ -1,0 +1,151 @@
+\documentclass[9pt]{article}
+\usepackage[a4paper,margin=1.2in]{geometry}
+\usepackage{fancyhdr}
+\usepackage[titles]{tocloft}
+\usepackage[titletoc]{appendix}
+\usepackage{tikz}
+\usepackage{xcolor}
+
+\usepackage[ddmmyyyy]{datetime}
+
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{pdfpages}
+\usepackage{bm}
+\usepackage{tikz-cd}
+\usepackage{physics}
+\usepackage{placeins}
+
+\usepackage[german]{babel}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage[many]{tcolorbox}
+\tcolorboxenvironment{proof}{
+	colback=black!5!white,
+	boxrule=0pt,
+	sharp corners,
+	breakable,
+	enhanced,
+}
+
+%hyperref should be last apparently
+\usepackage{hyperref}
+
+\renewcommand\cftsecdotsep{\cftdot}
+\renewcommand\cftsubsecdotsep{\cftdot}
+\renewcommand\epsilon{\varepsilon}
+
+% Starts a new paragraph without indentation
+% and with an empty line between paragraphs
+\newcommand*{\newpar}{\par\vspace{\baselineskip}\noindent}
+
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\theoremname}[1]{\emph{\tbf{\ul{#1}}}}
+
+\newcommand{\bC}{\mathbb{C}}
+\newcommand{\bF}{\mathbb{F}}
+\newcommand{\bN}{\mathbb{N}}
+\newcommand{\bQ}{\mathbb{Q}}
+\newcommand{\bR}{\mathbb{R}}
+\newcommand{\bZ}{\mathbb{Z}}
+
+\newcommand{\an}{(a_n)_{n \in \bN}}
+\newcommand{\bn}{(b_n)_{n \in \bN}}
+\newcommand{\sn}{(s_n)_{n \in \bN}}
+
+\renewcommand*\contentsname{Inhalt}
+\renewcommand*\proofname{Beweis}
+
+\renewcommand{\labelenumi}{\roman{enumi}.)}
+
+%\pagestyle{fancy} %allows headers
+\pagenumbering{gobble}
+
+\begin{document}
+	% \newtheorem{codename}{printedname}[countedwith]
+	\newcounter{hahaone}
+	\setcounter{hahaone}{1}
+	
+	\newtheorem{lemma}{Lemma}[hahaone]
+	\newtheorem{theorem}[lemma]{Satz}
+	\newtheorem{proposition}[lemma]{Proposition}
+	\newtheorem{corollary}[lemma]{Korollar}
+	\newtheorem{application}[lemma]{Anwendung}
+	
+	\theoremstyle{definition}
+	\newtheorem{definition}[lemma]{Definition}
+	\newtheorem{example}[lemma]{Beispiel}
+	
+	\title{\Large\vspace{-3cm}\textbf{$p$-adische Zahlen und das Henselsche Lemma}}
+	\author{Emma Bach - Proseminar Elementare Zahlentheorie, WS25/26}
+	
+	\maketitle
+	
+
+	\begin{definition}
+		Sei $p$ eine Primzahl. Wir nennen folgende Abbildung $\bZ \to \bN_0$ die \tbf{$p$-adische Bewertung} auf $\bZ$:
+		\begin{align*}
+			v_p(n) = 
+			\begin{cases}
+				\max\{k \in \bN_0 : p^k \mid n\} & n \neq 0\\
+				\infty & n = 0
+			\end{cases}
+		\end{align*}
+		Die $p$-adische Bewertung ist auch bekannt als die \tbf{Vielfachheit von $p$ in $n$}. Die $p$-adische Bewertung kann durch die Vorschrift $v_p\left(\frac{r}{s}\right) = v_p(r) - v_p(s)$ auf die rationalen Zahlen erweitert werden.
+	\end{definition}
+	\begin{definition}
+		Der $p$-adischen Betrag $\abs{-}_p$ auf $\bQ$ ist die Abbildung:
+		\begin{align*} 
+			\abs{n}_p = \frac{1}{p^{v_p(n)}}
+		\end{align*}
+	\end{definition}
+	\begin{theorem}
+		\theoremname{Satz von Ostrowski:} Jeder Betrag auf $\bQ$ ist entweder der triviale Betrag, oder äquivalent zu $\abs{-}_p$ für eine Primzahl $p$, oder äquivalent zum Standardabsolutbetrag $\abs{-}$.
+	\end{theorem}
+	\setcounter{hahaone}{2}
+	\begin{definition}
+		Wir bezeichnen die Vervollständigung des Rings $\bZ$ gemäß der durch den $p$-adischen Absolutbetrag erzeugten Metrik als die \tbf{$p$-adischen ganzen Zahlen} $\bZ_p$. Analog bezeichnen wir die Vervollständigung des Rings $\bQ$ gemäß der $p$-adischen Metrik als die \tbf{$p$-adischen Zahlen} $\bQ_p$. Die Konstruktion verläuft analog zur Konstruktion von $\bR$ aus Cauchyfolgen in $\bQ$.
+	\end{definition}
+	\begin{proposition}
+		Jede Reihe der Form
+		\begin{align*}
+			x = \sum_{n = m}^\infty d_n p^n,
+		\end{align*}
+		wobei $m \in \bZ_{\leq 0}$, $d_n \in \{0,1,\hdots,p-1\}$, konvergiert in $\bQ_p$. Wir nennen die Folge $d_n$ die \tbf{$p$-adische Darstellung von $x$}. Jede $p$-adische Zahl kann als eine solche Reihe dargestellt werden.
+	\end{proposition}
+	\noindent Wir können jede $p$-adische Zahl $z$ somit analog zur Standarddarstellung Basis $p$ schreiben: 
+	\begin{align*}
+		z = \hdots d_4 d_3 d_2 d_1 d_0, d_{-1} \hdots d_{m}
+	\end{align*}
+	In manchen Quellen werden $p$-adische Zahlen umgekehrt geschrieben, mit der kleinsten Ziffer links.
+	\begin{proposition}
+		Sei $p$ beliebig. So ist in der $p$-adischen Darstellung von $-1$ jede Ziffer\\ $p-1$. Die $5$-adische Darstellung von $-1$ ist also $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$. Somit ist bei der Darstellung $p$-adischer Zahlen kein Vorzeichen nötig.
+	\end{proposition}
+	\setcounter{hahaone}{3}
+	\begin{theorem}
+		\theoremname{Henselsches Lemma:}
+		Sei $f(x)$ ein Polynom mit Koeffizienten $c_i \in \bZ_p$. Sei $f'(x)$ die Ableitung von $f(x)$.
+		Sei außerdem $a \in \bZ_p$, sodass:
+		\begin{align*}
+			f(a) \equiv 0 &\mod p\\
+			f'(a) \not\equiv 0 &\mod p
+		\end{align*}
+		Dann existiert ein eindeutiges $\alpha \in \bZ_p$, sodass:
+		\begin{align*}
+				f(\alpha) &= 0\\
+				\alpha &\equiv a \mod p
+		\end{align*}
+	\end{theorem}
+	\begin{application}
+		Das Polynom $f(x) = x^2 + 1$ erfüllt für $p = 5$ und $a = 2$ die gefragten Bedingungen. Somit existiert eine Nullstelle in $\bZ_5$, also $i = \sqrt{-1} \in \bZ_5$.
+	\end{application}
+	\begin{application}
+		Eine $p$-adische Zahl $u$ hat eine $k$-te Wurzel in den $p$-adischen Zahlen, wenn $k \not \equiv 0 \mod p$ und eine Zahl $n$ mit $n \equiv u \mod p$ existiert, sodass $n$ eine $k$-te Wurzel in $\bZ / p\bZ$ hat.
+	\end{application}
+\end{document}
