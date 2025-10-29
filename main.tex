@@ -24,8 +24,11 @@
 
 \usepackage[many]{tcolorbox}
 \tcolorboxenvironment{proof}{
-	colback=black!5!white,
+	colback=white,
 	boxrule=0pt,
+	leftrule=0.5mm,
+	before skip=0.75cm,
+	after skip=0.75cm,
 	sharp corners,
 	breakable,
 	enhanced,
@@ -33,6 +36,18 @@
 
 %hyperref should be last apparently
 \usepackage{hyperref}
+
+\usepackage{contour}
+\usepackage{ulem}
+
+\renewcommand{\ULdepth}{1.6pt}
+\contourlength{0.8pt}
+
+\newcommand{\ul}[1]{%
+	\uline{\phantom{#1}}%
+	\llap{\contour{white}{#1}}%
+}
+
 
 \renewcommand\cftsecdotsep{\cftdot}
 \renewcommand\cftsubsecdotsep{\cftdot}
@@ -44,9 +59,11 @@
 
 \newcommand{\ttt}[1]{\texttt{#1}}
 \newcommand{\tbf}[1]{\textbf{#1}}
-\newcommand{\ul}[1]{\underline{#1}}
+%\newcommand{\ul}[1]{%
+%	\underline{\smash{#1}}\vphantom{T}\vphantom{#1}%
+%}
 \newcommand{\ol}[1]{\overline{#1}}
-\newcommand{\theoremname}[1]{\emph{\tbf{\ul{#1}}}}
+\newcommand{\theoremname}[1]{\ul{\textnormal{\tbf{#1}}}}
 
 \newcommand{\bC}{\mathbb{C}}
 \newcommand{\bF}{\mathbb{F}}
@@ -282,9 +299,10 @@
 	\end{align*}
 	mit der kleinsten Ziffer rechts. In manchen Quellen werden $p$-adische Zahlen umgekehrt geschrieben, mit der kleinsten Ziffer links.
 	\newpar
-	\noindent Die $p$-adischen ganzen Zahlen sind genau die $p$-adischen Zahlen mit $m = 0$. Die Zahlen $\bZ \subsetneq \bZ_p$ sind genau die Zahlen, deren $p$-adische Darstellungen endlich sind, und diese Darstellung ist genau die übliche Darstellung Basis $p$.
+	\noindent Die $p$-adischen ganzen Zahlen sind genau die $p$-adischen Zahlen mit $m = 0$. Die Zahlen $\bZ \subsetneq \bZ_p$ sind genau die Zahlen, deren $p$-adische Darstellungen endlich sind, und die Darstellung positiver ganzer Zahlen ist genau die übliche Darstellung Basis $p$.
 	\begin{example}
-		Wir wollen die $2$-adische Darstellung von $-1$ finden.
+		Wir wollen die $p$-adische Darstellung von $-1$ finden.
+		\iffalse
 		\newpar
 		Wir brauchen also eine Folge $d_n$, sodass für jedes $n$
 		\begin{align*}
@@ -303,11 +321,24 @@
 			\implies \qquad 1 + d_n &\equiv 0 \mod 2
 		\end{align*}
 		Also $d_n = 1$. Die $2$-adische Darstellung von $-1$ ist also $\hdots1111$.
+		\fi
 	\end{example}
-	\begin{proposition}
-		Als Hausaufgabe: In der $p$-adische Darstellung von $-1$ für beliebiges $p$ ist jede Ziffer $p-1$. Die $5$-adische Darstellung ist also $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$.
-	\end{proposition}
-	\noindent Diese Darstellung ist tatsächlich analog zur Darstellung negativer Zahlen in binär in den meisten modernen Computern. Negative Zahlen werden in der Regel im \tbf{Zweierkomplement} dargestellt, was bedeutet, dass das höchstmögliche Bit negativ gezählt wird. Da wir hierfür vorher ein "höchstmögliches Bit" wählen müssen, ist unser Zahlenbereich beschränkt, und die Addition großer Zahlen kann zu Problemen wie dem bekannten \textit{Integer Overflow} führen. Die $p$-adischen Zahlen lösen dieses Problem, indem sie Zahlen erlauben, die beliebig Hochwertige Ziffern enthalten, und haben so trotzdem den selben Vorteil, dass sie kein Vorzeichen benötigen.
+	\begin{lemma}
+		In der $p$-adische Darstellung von $-1$ für beliebiges $p$ ist jede Ziffer $p-1$. Die $2$-adische Darstellung ist also $\hdots1111$, die $5$-adische Darstellung ist $\hdots4444$ und die $7$-adische Darstellung ist $\hdots66666$.
+	\end{lemma}
+	\begin{proof}
+		$d_0 \equiv -1 \mod p \implies d_0 = p - 1$. Wir nehmen also als Induktionsannahme an, dass $d_0 = \hdots = d_{n-1} = p-1$.
+		\begin{align*}
+			d_0 + d_1p + \hdots + d_np^n = \left((p-1)\sum_{i = 0}^{n-1} p^i + d_n p^n\right) 
+			&\equiv -1 \mod p^{n+1}\\
+			\implies \qquad (p-1)\frac{(1 - p^n)}{1-p} + d_n p^n &\equiv -1 \mod p^{n+1}\\
+			\implies \qquad (p^n - 1) + d_n p^n &\equiv -1 \mod p^{n+1}\\
+			\implies \qquad p^n + d_n p^n  &\equiv 0 \mod p^{n+1}\\
+			\implies \qquad 1 + d_n &\equiv 0 \mod p
+		\end{align*}
+	\end{proof}
+	
+	\noindent Diese Darstellung ist tatsächlich analog zur Darstellung negativer Zahlen in binär in den meisten modernen Computern. Negative Zahlen werden in der Regel im \tbf{Zweierkomplement} dargestellt, was bedeutet, dass das höchstmögliche Bit negativ gezählt wird. Da wir hierfür vorher ein "höchstmögliches Bit" wählen müssen, ist unser Zahlenbereich beschränkt, und die Addition großer Zahlen kann zu Problemen wie dem bekannten \textit{Integer Overflow} führen. Die $p$-adischen Zahlen lösen dieses Problem, indem sie Zahlen erlauben, die beliebig hochwertige Ziffern enthalten, und haben so trotzdem den selben Vorteil, dass sie kein Vorzeichen benötigen.
 	\chapter{Das Henselsche Lemma}
 	Das Henselsche Lemma ist eine Methode, um Polynomgleichungen in $\bZ_p$ zu lösen. Es liefert uns somit insbesondere eine einfache Möglichkeit, die $p$-adische Darstellung bestimmter algebraischer Zahlen zu finden.
 	\begin{theorem}
@@ -470,7 +501,7 @@
 		Die $7$-adische Darstellung von $\sqrt{2}$ endet also in $\hdots213$.
 	\end{example}
 	\begin{application}
-		Eine $p$-adische Zahl $u$ hat eine $k$-te Wurzel in den $p$-adischen Zahlen, wenn $k \not \equiv 0 \mod p$ und eine Zahl $n$ mit $n \equiv u \mod p$ existiert, sodass $n$ eine $k$-te Wurzel in $\bZ / p\bZ$ hat.
+		Sei $u \in \bZ_p$. Sei $k \not \equiv 0 \mod p$. Sei $n$ eine Zahl mit $n \equiv u \mod p$, welche eine $k$-te Wurzel in $\bZ / p\bZ$ hat. Dann hat $u$ eine $k$-te Wurzel in $\bZ_p$.
 	\end{application}
 	\begin{proof}
 		Wähle $f(x) = x^k - u$. So gilt $f'(x) = kx \not \equiv 0$, und das Henselsche Lemma garantiert eine Lösung, falls wir eine initiale Nullstelle $n = x^k \equiv u \mod p$ finden können
